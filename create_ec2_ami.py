@@ -1,4 +1,7 @@
 import boto3
+import datetime
+
+date_time = datetime.datetime.now()
 
 region = 'ap-southeast-2'
 #Create a session 
@@ -33,15 +36,17 @@ output = {}
 for i, instance in enumerate(instance_ids):
      output[instance] = name_tags[i]
 
-#Create AMI image using instance id 
+# Create curr_date var that will hold current date
+curr_date = date_time.strftime('-'"%b"+'-'"%d"+'-'"%Y")
+#Create AMI image using instance id and add the current date
 for instances in instance_ids:
-    ami_name = output.get(instances)
+    ami_name = output.get(instances) + curr_date
+ 
     try:
         ec2_client.create_image(InstanceId=instance, Name=ami_name)
-        print("Created AMI for:", ami_name)
+        print("Created AMI:", ami_name)
     #Print error if encountered
     except:
-         print("Error creating AMI for:", ami_name)
-
+         print("Error creating AMI:", ami_name)
     
 
